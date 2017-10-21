@@ -24,7 +24,7 @@ class App extends Component {
         data: result.data,
         city: result.data.name,
         desc: result.data.weather[0].description,
-        temp: result.data.main.temp
+        temp: ((result.data.main.temp) - 273)
        });
     });
     
