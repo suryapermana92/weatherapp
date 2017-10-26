@@ -32,7 +32,7 @@ class App extends Component {
        });
     })
     .catch((error) => {
-      alert(error);
+      alert('Please enter a valid city name!');
     });
     
     console.log(this.state.data)
@@ -42,7 +42,7 @@ class App extends Component {
     if (this.state.data) {
       console.log(this.state.icon)
       return (
-<Card>
+        <Card>
           <CardSection>
           <View style={{ 
             flexDirection: 'row',
@@ -81,7 +81,8 @@ class App extends Component {
               I want to know the current weather in:
               </Text>
               <Input
-                placeholder='Enter your city'
+              
+                placeholder='Enter your city name'
                 value={this.state.cityInput}
                 onChangeText={text => this.setState({ cityInput: text })}
                 />
