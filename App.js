@@ -5,11 +5,12 @@ import {
   Image
 } from 'react-native';
 import axios from 'axios';
-import { Header, Card, CardSection, Button, Input } from './src/components';
+import { Header, Card, CardSection, Button, Input, Spinner } from './src/components';
 
 class App extends Component {
   
-  state = { 
+  state = {
+    loading: false,
     cityInput: '',
     data: '',
     city: '',
@@ -17,11 +18,21 @@ class App extends Component {
     temp: '',
     country:''
   }
+  componentWillMount() {
+  this.setState({ loading: false })
+  console.log(this.state.loading)
+  }
   onButtonPress() {
+    console.log(this.state.loading)
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.state.cityInput}&appid=0fb96df37506f1175d52250c72f0e840`
+    this.setState({ 
+      loading: true
+     });
+     console.log(this.state.loading)
     axios.get(url)
     .then((result) => {
       this.setState({ 
+        loading: false,
         data: result.data,
         icon: result.data.weather[0].icon,
         city: result.data.name,
@@ -32,12 +43,13 @@ class App extends Component {
        });
     })
     .catch((error) => {
+      this.setState({ loading: false})
       alert('Please enter a valid city name!');
     });
     
     console.log(this.state.data)
   }
-
+  
   renderDetail() {
     if (this.state.data) {
       console.log(this.state.icon)
@@ -69,6 +81,16 @@ class App extends Component {
       )
     }
   }
+  renderButton() {
+    if (this.state.loading) {
+        return <Spinner size="large" />;
+    }
+    return (
+        <Button onPress={this.onButtonPress.bind(this)}>
+            Log in
+        </Button>
+    );
+} 
   render() {
     return (
       <View style={backgroundStyle}>
@@ -90,18 +112,20 @@ class App extends Component {
                 </CardSection> 
 
         <CardSection>
-          <Button
-          onPress={this.onButtonPress.bind(this)}
-          >
-            Tell Me!
-          </Button>
+        
+        {this.renderButton()}
+        
+          
         </CardSection>
         </Card>
+        
         {this.renderDetail()}
+        
       </View>
       
     );
   }
+  
 }
 
 const styles = {
@@ -114,5 +138,6 @@ const styles = {
     textAlign: 'center'
   }
 }
+
 const { backgroundStyle } = styles;
 export default App;
